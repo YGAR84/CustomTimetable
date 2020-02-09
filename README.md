@@ -32,7 +32,7 @@ You need it to have all files to see your timetable in original style
 
 ## Example
 
-# Before:
+### Before:
 ![](/images/before.PNG)
-# After
+### After
 ![](/images/after.PNG)
