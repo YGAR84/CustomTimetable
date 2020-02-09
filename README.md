@@ -14,8 +14,8 @@ Custom timetable project is provide functional for creating custom timetable for
    3. pip3 beautifulsoup4
    4. pip3 lxml
 
-3. Download your timetable from "https://table.nsu.ru/group/your_group_number" in project directory(with chrome you should use save as)
-You need it to have all files to see it timetable in good view
+3. Download your timetable from "https://table.nsu.ru/group/your_group_number" in project directory(with chrome you should use save as).
+You need it to have all files to see your timetable in original style
 
 ## Usage
 1. Change config.json file:
@@ -26,6 +26,7 @@ You need it to have all files to see it timetable in good view
 
 2. Run python script:
    python3 parser.py config.json
+3. Open html file.
 3. Enjoy your new timetable!
 
 ## Example
