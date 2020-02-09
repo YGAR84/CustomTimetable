@@ -1,12 +1,6 @@
 import requests, re, os, sys, json
-#import numpy as np
 from html.parser import HTMLParser
 from bs4 import BeautifulSoup
-
-dayOfTheWeek = ['', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
-groupsArray = [17201, 17202, 17203, 17204, 17205, 17206, 17207, 17208, 17209, 17210]
-
-
 
 class Subject():
     def __init__(self, time, name, source):
@@ -18,12 +12,6 @@ def get_group(groupId):
     url = 'https://table.nsu.ru/group/%d' % groupId
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
-    return soup
-
-def get_group_with_content(groupId):
-    url = 'https://table.nsu.ru/group/%d' % groupId
-    r = requests.get(url)
-    soup = BeautifulSoup(r.content, 'lxml')
     return soup
 
 def parse_group(groupId):
@@ -42,13 +30,13 @@ def parse_group(groupId):
                 name = td.find('div', {'class' : 'cell'})
                 if name is not None:
                     result = re.search(r'\w.*\w', name.find('div', { 'class' : 'subject'}).string)
-                    b[tds[0].string][dayOfTheWeek[i]] = Subject(tds[0].string, result.group(0), td)
+                    b[tds[0].string][i] = Subject(tds[0].string, result.group(0), td)
                 else:
-                    b[tds[0].string][dayOfTheWeek[i]] = Subject(tds[0].string, '', td)
+                    b[tds[0].string][i] = Subject(tds[0].string, '', td)
                 i = i + 1
     return b
 
-def get_all_items():
+def get_all_items(groupsArray):
     result = {}
     for groupId in groupsArray:
         result[groupId] = parse_group(groupId)
@@ -62,7 +50,6 @@ def get_table_by_item(itemName, allItems):
                 if allItems[k1][k2][k3].name == itemName:
                     if k2 not in result:
                         result[k2] = {}
-
                     result[k2][k3] = allItems[k1][k2][k3] 
     return result
 
@@ -85,8 +72,8 @@ def merge_tables(priorityTable, slaveTable):
                 priorityTable[k1][k2] = slaveTable[k1][k2]
     return priorityTable
 
-def create_rasp_for_group(groupId, itemsToAdd, itemsToDelete):
-    allItems = get_all_items()
+def create_rasp_for_group(groupId, itemsToAdd, itemsToDelete, groupsArray):
+    allItems = get_all_items(groupsArray)
     groupItems = parse_group(groupId)
 
     for deleteItem in itemsToDelete:
@@ -108,10 +95,9 @@ def transponate_resp(items):
                 result[k2][k1] = items[k1][k2]
     return result
 
-def create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete):
-    fixedRasp = create_rasp_for_group(groupId, itemsToAdd, itemsToDelete)
+def create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete, groupsArray):
+    fixedRasp = create_rasp_for_group(groupId, itemsToAdd, itemsToDelete, groupsArray)
 
-    print_created_rasp(fixedRasp)
     table = sourceHtml.find('table', { 'class' : 'time-table' })
     trs = table.find_all('tr')
 
@@ -120,13 +106,11 @@ def create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete):
         if tds is not None:
             i = 0
             timeNow = re.search(r'\w.*\w', tds[0].string).group(0)
-            print(timeNow)
             for td in tds:
                 try:
-                    newSource = fixedRasp[timeNow][dayOfTheWeek[i]].source
+                    newSource = fixedRasp[timeNow][i].source
                     td.replace_with(newSource)
                 except KeyError:
-                    print('niggaWhat')
                     td.replace_with(BeautifulSoup('<td></td>', 'html.parser'))
                 i = i + 1
     
@@ -153,9 +137,10 @@ def main(argv):
     htmlFilePath = data['html_path']
     itemsToAdd = data['items_to_add']
     itemsToDelete = data['items_to_delete']
+    groupsArray = data['groups']
 
     sourceHtml = BeautifulSoup(open(htmlFilePath), "html.parser")
-    fixedRasp = create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete)
+    fixedRasp = create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete, groupsArray)
     save_rasp_in_file(htmlFilePath, fixedRasp)
 
 def print_created_rasp(lalala):

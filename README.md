@@ -15,12 +15,14 @@ Custom timetable project is provide functional for creating custom timetable for
    4. pip3 lxml
 
 3. Download your timetable from "https://table.nsu.ru/group/your_group_number" in project directory(with chrome you should use save as)
+You need it to have all files to see it timetable in good view
 
 ## Usage
 1. Change config.json file:
    1. Put your group number
    2. Put name of downloaded html file
    3. Change itemsToAdd and itemsToDelete whatever you want
+   4. Put all groups from your stream
 
 2. Run python script:
    python3 parser.py config.json
@@ -45,5 +47,18 @@ Custom timetable project is provide functional for creating custom timetable for
 			"ТООИ",
 			"Инж. и комп. графика",
 			"СММО"
+		],
+		"groups":
+		[
+			17201,
+			17202,
+			17203,
+			17204,
+			17205,
+			17206,
+			17207,
+			17208,
+			17209,
+			17210
 		]
 	}
