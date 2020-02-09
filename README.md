@@ -11,8 +11,8 @@ Custom timetable project is provide functional for creating custom timetable for
 2. You will need following dependencies to build project:
    1. python3+
    2. python-pip3
-   3. pip3 beautifulsoup4
-   4. pip3 lxml
+   3. pip3 install beautifulsoup4
+   4. pip3 install lxml
 
 3. Download your timetable from "https://table.nsu.ru/group/your_group_number" in project directory(with chrome you should use save as).
 You need it to have all files to see your timetable in original style
