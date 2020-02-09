@@ -140,6 +140,7 @@ def main(configPath):
 
     sourceHtml = BeautifulSoup(open(htmlFilePath), "html.parser")
     fixedRasp = create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete, groupsArray)
+    
     save_rasp_in_file(htmlFilePath, fixedRasp)
 
 def print_created_rasp(lalala):
