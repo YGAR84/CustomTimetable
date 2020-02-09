@@ -25,7 +25,7 @@ You need it to have all files to see your timetable in original style
    4. Put all groups from your stream
 
 2. Run python script:
-   python3 parser.py config.json
+   python3 parser.py [ path/to/your/config/file ]
 3. Open html file.
 3. Enjoy your new timetable!
 

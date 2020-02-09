@@ -127,8 +127,7 @@ def save_rasp_in_file(filepath, rasp):
 def create_group_rasp(configPath, sourcePath):
     return 0
 
-def main(argv):
-    configPath = argv[0]
+def main(configPath):
     data = {}
     with open(configPath, "r") as read_file:
         data = json.load(read_file)
@@ -151,4 +150,7 @@ def print_created_rasp(lalala):
             print('\t|', k2, '|', lululu[k1][k2].name)
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    configPath = "config.json"
+    if len(sys.argv) >= 2:
+        configPath = sys.argv[1]
+    main(configPath)
