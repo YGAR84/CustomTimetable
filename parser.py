@@ -18,23 +18,23 @@ def parse_group(groupId):
     soup = get_group(groupId)
     table = soup.find('table', { 'class' : 'time-table' })
     trs = table.find_all('tr')
-    b = {}
+    result = {}
 
     for tr in trs[1:]:
         tds = tr.find_all('td')
         if tds is not None:
             i = 0
             for td in tds:
-                if tds[0].string not in b:
-                    b[tds[0].string] = {}
+                if tds[0].string not in result:
+                    result[tds[0].string] = {}
                 name = td.find('div', {'class' : 'cell'})
                 if name is not None:
-                    result = re.search(r'\w.*\w[.]?', name.find('div', { 'class' : 'subject'}).string)
-                    b[tds[0].string][i] = Subject(tds[0].string, result.group(0), td)
+                    resultName = re.search(r'\w.*\w[.]?', name.find('div', { 'class' : 'subject'}).string).group(0)
+                    result[tds[0].string][i] = Subject(tds[0].string, resultName, td)
                 else:
-                    b[tds[0].string][i] = Subject(tds[0].string, '', td)
+                    result[tds[0].string][i] = Subject(tds[0].string, '', td)
                 i = i + 1
-    return b
+    return result
 
 def get_all_items(groupsArray):
     result = {}
@@ -85,14 +85,14 @@ def create_rasp_for_group(groupId, itemsToAdd, itemsToDelete, groupsArray):
 
     return groupItems
 
-def transponate_resp(items):
+def transponate_rasp(rasp):
     result = {}
-    for k1 in items:
-        for k2 in items[k1]:
+    for k1 in rasp:
+        for k2 in rasp[k1]:
             if k2 != '' :
                 if k2 not in result:
                     result[k2] = {}
-                result[k2][k1] = items[k1][k2]
+                result[k2][k1] = rasp[k1][k2]
     return result
 
 def create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete, groupsArray):
@@ -142,12 +142,12 @@ def main(configPath):
     fixedRasp = create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete, groupsArray)
     save_rasp_in_file(htmlFilePath, fixedRasp)
 
-def print_created_rasp(lalala):
-    lululu = transponate_resp(lalala)
-    for k1 in lululu:
+def print_created_rasp(rasp):
+    t_rasp = transponate_resp(rasp)
+    for k1 in t_rasp:
         print(k1, ':')
-        for k2 in lululu[k1]:
-            print('\t|', k2, '|', lululu[k1][k2].name)
+        for k2 in t_rasp[k1]:
+            print('\t|', k2, '|', t_rasp[k1][k2].name)
 
 if __name__ == "__main__":
     configPath = "config.json"
