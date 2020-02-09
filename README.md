@@ -31,36 +31,4 @@ You need it to have all files to see your timetable in original style
 4. Enjoy your new timetable!
 
 ## Example
-   config.json:
-	{
-		"group_id":17202,
-		"html_path":"rasp.html",
-		"items_to_add":
-		[
-			"АСМиМ", 
-			"ЭПСМиМ", 
-			"ЛМИЗ"
-		],
-		"items_to_delete":
-		[
-			"МиМИИ",
-			"Теор. автоматов", 
-			"Учеб. практика, НИР",
-			"ТООИ",
-			"Инж. и комп. графика",
-			"СММО"
-		],
-		"groups":
-		[
-			17201,
-			17202,
-			17203,
-			17204,
-			17205,
-			17206,
-			17207,
-			17208,
-			17209,
-			17210
-		]
-	}
+

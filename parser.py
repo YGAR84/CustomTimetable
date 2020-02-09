@@ -29,7 +29,7 @@ def parse_group(groupId):
                     b[tds[0].string] = {}
                 name = td.find('div', {'class' : 'cell'})
                 if name is not None:
-                    result = re.search(r'\w.*\w', name.find('div', { 'class' : 'subject'}).string)
+                    result = re.search(r'\w.*\w[.]?', name.find('div', { 'class' : 'subject'}).string)
                     b[tds[0].string][i] = Subject(tds[0].string, result.group(0), td)
                 else:
                     b[tds[0].string][i] = Subject(tds[0].string, '', td)
@@ -140,7 +140,6 @@ def main(configPath):
 
     sourceHtml = BeautifulSoup(open(htmlFilePath), "html.parser")
     fixedRasp = create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete, groupsArray)
-    
     save_rasp_in_file(htmlFilePath, fixedRasp)
 
 def print_created_rasp(lalala):
