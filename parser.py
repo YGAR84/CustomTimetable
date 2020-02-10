@@ -8,6 +8,13 @@ class Subject():
         self.name = name
         self.source = source
 
+class TagNotFoundException(Exception):
+    def __init__(self, message):
+        self.message = message
+    
+    def __str__(self):
+        return "Tag <%s> not found" % self.message
+
 def get_group(groupId):
     url = 'https://table.nsu.ru/group/%d' % groupId
     r = requests.get(url)
@@ -99,6 +106,8 @@ def create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete, groupsArra
     fixedRasp = create_rasp_for_group(groupId, itemsToAdd, itemsToDelete, groupsArray)
 
     table = sourceHtml.find('table', { 'class' : 'time-table' })
+    if table is None:
+        raise TagNotFoundException('table class=\"timetable\"')
     trs = table.find_all('tr')
 
     for tr in trs[1:]:
@@ -128,18 +137,53 @@ def create_group_rasp(configPath, sourcePath):
     return 0
 
 def main(configPath):
-    data = {}
-    with open(configPath, "r") as read_file:
-        data = json.load(read_file)
+    try:
+        with open(configPath, "r") as read_file:
+            data = json.load(read_file)
+    except FileNotFoundError:
+        print("File not found: %s" % configPath)
+        return
     
-    groupId = data['group_id']
-    htmlFilePath = data['html_path']
-    itemsToAdd = data['items_to_add']
-    itemsToDelete = data['items_to_delete']
-    groupsArray = data['groups']
+    try:
+        groupId = data['group_id']
+    except KeyError:
+        print("\'group_id\' tag not found in %s" % configPath)
+        return
 
-    sourceHtml = BeautifulSoup(open(htmlFilePath), "html.parser")
-    fixedRasp = create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete, groupsArray)
+    try:
+        htmlFilePath = data['html_path']
+    except KeyError:
+        print("\'html_path\' tag not found in %s" % configPath)
+        return
+
+    try:
+        itemsToAdd = data['items_to_add']
+    except KeyError:
+        print("\'items_to_add\' tag not found in %s" % configPath)
+        return
+
+    try:
+        itemsToDelete = data['items_to_delete']
+    except KeyError:
+        print("\'items_to_delete\' tag not found in %s" % configPath)
+        return
+    
+    try:
+        groupsArray = data['groups']
+    except KeyError:
+        print("\'groups\' tag not found in %s" % configPath)
+        return
+
+    try:
+        sourceHtml = BeautifulSoup(open(htmlFilePath), "html.parser")
+    except FileNotFoundError:
+        print("File not found: %s" % htmlFilePath)
+        return
+    try:
+        fixedRasp = create_fixed_rasp(groupId, sourceHtml, itemsToAdd, itemsToDelete, groupsArray)
+    except TagNotFoundException as e:
+        print(e)
+        return
     save_rasp_in_file(htmlFilePath, fixedRasp)
 
 def print_created_rasp(rasp):
