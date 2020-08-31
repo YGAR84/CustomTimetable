@@ -26,7 +26,8 @@ You need it to have all files to see your timetable in original style
 
 2. Run python script:
 
-	`python3 parser.py [ path/to/your/config/file ]`
+	`python3 parser.py [ path/to/your/config/file ]` 
+	`(for example, python3 parser.py config.json)`
 3. Open html file.
 4. Enjoy your new timetable!
 
