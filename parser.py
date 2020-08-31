@@ -54,7 +54,7 @@ def get_table_by_item(itemName, allItems):
     for k1 in allItems:
         for k2 in allItems[k1]:
             for k3 in allItems[k1][k2]:
-                if allItems[k1][k2][k3].name == itemName:
+                if itemName in allItems[k1][k2][k3].name:
                     if k2 not in result:
                         result[k2] = {}
                     result[k2][k3] = allItems[k1][k2][k3] 
@@ -64,7 +64,7 @@ def delete_table_by_item(itemName, items):
     result = {}
     for k1 in items:
         for k2 in items[k1]:
-            if items[k1][k2].name != itemName:
+            if itemName not in items[k1][k2].name:
                 if k1 not in result:
                     result[k1] = {}
                 result[k1][k2] = items[k1][k2]
